@@ -19,10 +19,10 @@ const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvxyz', 5)
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAvraf5s5RDgCPkjh63-hFgi10j11fiPxM",
+  apiKey: "AAAAwisOz3Q:APA91bE1MfXpnJ6ONlsTPYr9Meh1AGlEt1VPqozzYHgkXCXXBebVJhX3zCjBaNMl5Lr04b6lCzrcKF8xvqW6mNNcF-CQNTFPR3VS1ORCtk6QOH4qAI9CCZnxmWJvuUG2ItitL7vFgdnu",
   authDomain: "country-quiz-dc997.firebaseapp.com",
   databaseURL: "https://country-quiz-dc997-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "country-quiz-dc997",
+  projectId: "fir-databse-76dfc",
   storageBucket: "country-quiz-dc997.appspot.com",
   messagingSenderId: "9659259197",
   appId: "1:9659259197:web:101698eeac61dd64ea4d54",
