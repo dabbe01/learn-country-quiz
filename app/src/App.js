@@ -1,6 +1,6 @@
 import React from 'react'
 import * as R from 'ramda'
-import {Link, Route, useLocation} from "wouter"
+import { Link, Route, useLocation } from "wouter"
 import { customAlphabet } from 'nanoid'
 import './App.css'
 import * as utils from './utils'
@@ -19,14 +19,14 @@ const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvxyz', 5)
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAvraf5s5RDgCPkjh63-hFgi10j11fiPxM",
-  authDomain: "country-quiz-dc997.firebaseapp.com",
-  databaseURL: "https://country-quiz-dc997-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "country-quiz-dc997",
-  storageBucket: "country-quiz-dc997.appspot.com",
-  messagingSenderId: "9659259197",
-  appId: "1:9659259197:web:101698eeac61dd64ea4d54",
-  measurementId: "G-SM2WHHKWFM"
+	apiKey: "AIzaSyC2ADrSknLZmJcGU5OR-rrQOj5nGZs06RE",
+	authDomain: "country-quiz-867e9.firebaseapp.com",
+	databaseURL: "https://country-quiz-867e9-default-rtdb.europe-west1.firebasedatabase.app",
+	projectId: "country-quiz-867e9",
+	storageBucket: "country-quiz-867e9.appspot.com",
+	messagingSenderId: "967534424377",
+	appId: "1:967534424377:web:a620c0c0e6a2f97ef738e8",
+	measurementId: "G-VNLGTV8JV1"
 };
 
 // Initialize Firebase
@@ -114,7 +114,7 @@ const StartPage = () => {
 	)
 }
 
-const GamePage = ({gameId, playerId}) => {
+const GamePage = ({ gameId, playerId }) => {
 	const [snapshot, loading, error] = useObject(ref(db, `games/${gameId}`))
 	const [location, setLocation] = useLocation();
 
@@ -127,22 +127,22 @@ const GamePage = ({gameId, playerId}) => {
 		await update(ref(db), updates)
 		setLocation(`/`)
 	}
-	
+
 	if (game && game.status === 'playing') return <QuestionPage gameId={gameId} playerId={playerId} />
 	if (game && game.status === 'finished') return <ResultsPage gameId={gameId} playerId={playerId} />
-	
+
 	return (
 		<div className="page">
 			<div className="fw6 fs9 tac">
 				{!game && 'Waiting for opponent...'}
 				{game && game.status === 'starting' && 'Starting game... Get READY!'}
 			</div>
-			{!game && <div className="link" style={{marginTop: '10rem'}} onClick={cancel}>Cancel</div>}
+			{!game && <div className="link" style={{ marginTop: '10rem' }} onClick={cancel}>Cancel</div>}
 		</div>
 	)
 }
 
-const QuestionPage = ({gameId, playerId}) => {
+const QuestionPage = ({ gameId, playerId }) => {
 	const [snapshot, loading, error] = useObject(ref(db, `games/${gameId}`))
 
 	if (loading) return <div className="fw6 fs5">Loading...</div>
@@ -155,11 +155,11 @@ const QuestionPage = ({gameId, playerId}) => {
 
 	if (!question) return 'Loading...'
 
-	const answer = async (countryCode) => {
+	const answer = async (countryCode) => {
 		if (question.fastest) return
 
 		const updates = {}
-		updates[`/games/${gameId}/questions/${game.currentQuestion}/fastest`] = {player: playerId, answer: countryCode}
+		updates[`/games/${gameId}/questions/${game.currentQuestion}/fastest`] = { player: playerId, answer: countryCode }
 		if (countryCode == question.correct) {
 			updates[`/games/${gameId}/score/${youKey}`] = game.score[youKey] + 1
 		}
@@ -197,9 +197,9 @@ const QuestionPage = ({gameId, playerId}) => {
 					}
 					return (
 						<div className={`button alt ${correct && 'alt-green'} ${correct === false && 'alt-red'}`}
-						key={countryCode} title={countryCode} onClick={() => answer(countryCode)}>
+							key={countryCode} title={countryCode} onClick={() => answer(countryCode)}>
 							{countries[countryCode.toUpperCase()]}
-							{}
+							{ }
 							{youOrOpponent && <div className="alt-label">{youOrOpponent}</div>}
 						</div>)
 				})}
@@ -212,7 +212,7 @@ const QuestionPage = ({gameId, playerId}) => {
 	)
 }
 
-const QuickResults = ({you, opponent}) => {
+const QuickResults = ({ you, opponent }) => {
 	return (
 		<div className="quick-results">
 			YOU {you} - {opponent} OPPONENT
@@ -220,7 +220,7 @@ const QuickResults = ({you, opponent}) => {
 	)
 }
 
-const ResultsPage = ({gameId, playerId}) => {
+const ResultsPage = ({ gameId, playerId }) => {
 	const [snapshot, loading, error] = useObject(ref(db, `games/${gameId}`))
 
 	if (loading) return <div className="fw6 fs5">Loading...</div>
@@ -240,20 +240,20 @@ const ResultsPage = ({gameId, playerId}) => {
 	)
 }
 
-const Won = ({you, opponent}) => {
+const Won = ({ you, opponent }) => {
 	return (
 		<div className="results">
-			<img src={winning} style={{width: '80%'}} />
+			<img src={winning} style={{ width: '80%' }} />
 			<div className="re-text">Congratulations!!</div>
 			<QuickResults you={you} opponent={opponent} />
 		</div>
 	)
 }
 
-const Lost = ({you, opponent}) => {
+const Lost = ({ you, opponent }) => {
 	return (
 		<div className="results">
-			<img src={dog} style={{width: '80%'}} />
+			<img src={dog} style={{ width: '80%' }} />
 			<div className="re-text">Better luck next time...</div>
 			<QuickResults you={you} opponent={opponent} />
 		</div>
