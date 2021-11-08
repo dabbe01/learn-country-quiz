@@ -7,6 +7,7 @@ import * as utils from './utils'
 import countries from './countries'
 import winning from '../assets/winning.png'
 import dog from '../assets/dog.png'
+import * as featureFlags from './features'
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app"
@@ -157,11 +158,16 @@ const QuestionPage = ({ gameId, playerId }) => {
 
 	const answer = async (countryCode) => {
 		if (question.fastest) return
+		const features = JSON.parse(localStorage.getItem('features'));
+		const smartScore = features?.smartScore;
+		console.log(features)
 
 		const updates = {}
 		updates[`/games/${gameId}/questions/${game.currentQuestion}/fastest`] = { player: playerId, answer: countryCode }
 		if (countryCode == question.correct) {
 			updates[`/games/${gameId}/score/${youKey}`] = game.score[youKey] + 1
+		} else if (countryCode != question.correct && smartScore?.enabled) {
+			updates[`/games/${gameId}/score/${youKey}`] = game.score[youKey] - 1
 		}
 		await update(ref(db), updates)
 
@@ -189,10 +195,10 @@ const QuestionPage = ({ gameId, playerId }) => {
 					if (question.fastest && question.fastest.answer == countryCode) {
 						correct = question.fastest.answer === question.correct
 						if (question.fastest.player === playerId) {
-							youOrOpponent = `YOU ${correct ? ' +1' : ''}`
+							youOrOpponent = `YOU ${correct ? ' +1' : '-1'}`;
 						}
 						else {
-							youOrOpponent = `OPPONENT ${correct ? ' +1' : ''}`
+							youOrOpponent = `OPPONENT ${correct ? ' +1' : '-1'}`;
 						}
 					}
 					return (
