@@ -90,9 +90,9 @@ const StartPage = () => {
 		}
 	}
 
+	const shuffledFlags = utils.shuffle(Object.keys(countries).map(key => key.toLowerCase()));
+	const flags = [];
 	if (moreFlagsFeature) {
-		const shuffledFlags = utils.shuffle(Object.keys(countries).map(key => key.toLowerCase()));
-		const flags = [];
 		for (let i = 0; i < 100; i++) {
 			if (flags.includes(shuffledFlags[i])) {
 				i--;
