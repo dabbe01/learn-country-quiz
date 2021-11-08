@@ -38,8 +38,8 @@ const getRandomQuestions = () => {
 }
 
 export const createGame = () => {
-	const generatedQuestions = getRandomQuestions();
-
+	const generatedQuestions = JSON.parse(localStorage.getItem('features'))?.randomQuestions.enabled ? getRandomQuestions() : hardCodedQuestions;
+	console.log(JSON.parse(localStorage.getItem('features')))
 	return {
 		currentQuestion: 1,
 		questions: generatedQuestions,

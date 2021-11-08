@@ -4,11 +4,11 @@ const featureFlags = {
         description: 'Punishment for faulty answers',
     },
     randomQuestions: {
-        enabled: true,
+        enabled: false,
         description: 'Randomize the questions',
     },
     tieResults: {
-        enabled: false,
+        enabled: true,
         description: 'Tied result if both players answer correctly an equal amount of times',
     },
 };

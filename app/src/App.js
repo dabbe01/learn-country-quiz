@@ -7,6 +7,7 @@ import * as utils from './utils'
 import countries from './countries'
 import winning from '../assets/winning.png'
 import dog from '../assets/dog.png'
+import tie from '../assets/tie.png'
 import * as featureFlags from './features'
 
 // Import the functions you need from the SDKs you need
@@ -160,6 +161,8 @@ const QuestionPage = ({ gameId, playerId }) => {
 		const features = JSON.parse(localStorage.getItem('features'));
 		const smartScore = features?.smartScore;
 
+		console.log(features)
+
 		const updates = {}
 		updates[`/games/${gameId}/questions/${game.currentQuestion}/fastest`] = { player: playerId, answer: countryCode }
 		if (countryCode == question.correct) {
@@ -233,13 +236,28 @@ const ResultsPage = ({ gameId, playerId }) => {
 	const youKey = `player${playerId}`
 	const opponentKey = `player${parseInt(playerId) === 1 ? 2 : 1}`
 
-	const youWon = (game.score[youKey] >= game.score[opponentKey])
+	const youWon = game.score[youKey] > game.score[opponentKey];
+
+	const youLost = game.score[youKey] < game.score[opponentKey];
+
+	const tied = game.score[youKey] === game.score[opponentKey];
 
 	return (
 		<div className="page">
 			{youWon && <Won you={game.score[youKey]} opponent={game.score[opponentKey]} />}
-			{!youWon && <Lost you={game.score[youKey]} opponent={game.score[opponentKey]} />}
+			{youLost && <Lost you={game.score[youKey]} opponent={game.score[opponentKey]} />}
+			{tied && <Tied you={game.score[youKey]} opponent={game.score[opponentKey]} />}
 			<Link href="/" className="re-home link">Home</Link>
+		</div>
+	)
+}
+
+const Tied = ({ you, opponent }) => {
+	return (
+		<div className="results">
+			<img src={tie} style={{ width: '80%' }} />
+			<div className="re-text">It's a tie!</div>
+			<QuickResults you={you} opponent={opponent} />
 		</div>
 	)
 }
