@@ -8,7 +8,7 @@ const featureFlags = {
         description: 'Randomize the questions',
     },
     tieResults: {
-        enabled: true,
+        enabled: false,
         description: 'Tied result if both players answer correctly an equal amount of times',
     },
 };

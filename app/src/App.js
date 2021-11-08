@@ -156,12 +156,13 @@ const QuestionPage = ({ gameId, playerId }) => {
 
 	if (!question) return 'Loading...'
 
+	const features = JSON.parse(localStorage.getItem('features'));
+	const smartScore = features?.smartScore;
+
+	console.log(features)
+
 	const answer = async (countryCode) => {
 		if (question.fastest) return
-		const features = JSON.parse(localStorage.getItem('features'));
-		const smartScore = features?.smartScore;
-
-		console.log(features)
 
 		const updates = {}
 		updates[`/games/${gameId}/questions/${game.currentQuestion}/fastest`] = { player: playerId, answer: countryCode }
@@ -196,10 +197,10 @@ const QuestionPage = ({ gameId, playerId }) => {
 					if (question.fastest && question.fastest.answer == countryCode) {
 						correct = question.fastest.answer === question.correct
 						if (question.fastest.player === playerId) {
-							youOrOpponent = `YOU ${correct ? ' +1' : '-1'}`;
+							youOrOpponent = `YOU ${correct ? ' +1' : smartScore.enabled ? ' -1' : ''}`;
 						}
 						else {
-							youOrOpponent = `OPPONENT ${correct ? ' +1' : '-1'}`;
+							youOrOpponent = `OPPONENT ${correct ? ' +1' : smartScore.enabled ? ' -1' : ''}`;
 						}
 					}
 					return (
