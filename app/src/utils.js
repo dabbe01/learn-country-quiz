@@ -21,7 +21,7 @@ const hardCodedQuestions = {
 	}
 }
 
-const getRandomQuestions = () => {
+export const getRandomQuestions = () => {
 	const keys = Object.keys(countries);
 	const randomCountries = {};
 	for (let i = 0; i < 5; i++) {
