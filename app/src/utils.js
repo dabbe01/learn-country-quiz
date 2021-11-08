@@ -29,6 +29,10 @@ const getRandomQuestions = () => {
 		const randomValues = [];
 		for (let j = 0; j < 4; j++) {
 			const randomKey = keys[Math.floor(Math.random() * keys.length)];
+			if (randomKeys.includes(randomKey.toLowerCase())) {
+				j--;
+				continue;
+			}
 			randomKeys.push(randomKey.toLowerCase());
 			randomValues.push(countries[randomKey]);
 		}
