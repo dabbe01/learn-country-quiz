@@ -97,7 +97,7 @@ const StartPage = () => {
 			i--;
 			continue;
 		}
-		flags.push(<div className="f32"><div className={`flag ${shuffledFlags[i]}`}></div></div>)
+		flags.push(<div className="f32" key={shuffledFlags[i]}><div className={`flag ${shuffledFlags[i]}`}></div></div>)
 	}
 
 	return (moreFlagsFeature
