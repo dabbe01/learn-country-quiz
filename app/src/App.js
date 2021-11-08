@@ -90,14 +90,16 @@ const StartPage = () => {
 		}
 	}
 
-	const shuffledFlags = utils.shuffle(Object.keys(countries).map(key => key.toLowerCase()));
-	const flags = [];
-	for (let i = 0; i < 100; i++) {
-		if (flags.includes(shuffledFlags[i])) {
-			i--;
-			continue;
+	if (moreFlagsFeature) {
+		const shuffledFlags = utils.shuffle(Object.keys(countries).map(key => key.toLowerCase()));
+		const flags = [];
+		for (let i = 0; i < 100; i++) {
+			if (flags.includes(shuffledFlags[i])) {
+				i--;
+				continue;
+			}
+			flags.push(<div className="f32" key={shuffledFlags[i]}><div className={`flag ${shuffledFlags[i]}`}></div></div>)
 		}
-		flags.push(<div className="f32" key={shuffledFlags[i]}><div className={`flag ${shuffledFlags[i]}`}></div></div>)
 	}
 
 	return (moreFlagsFeature
