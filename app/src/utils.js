@@ -41,6 +41,20 @@ const getRandomQuestions = () => {
 	return randomCountries;
 }
 
+// Fisher Yates shuffle
+export const shuffle = (array) => {
+	var m = array.length, t, i;
+
+	while (m) {
+		i = Math.floor(Math.random() * m--);
+		t = array[m];
+
+		array[m] = array[i];
+		array[i] = t;
+	}
+	return array;
+}
+
 export const createGame = () => {
 	const generatedQuestions = JSON.parse(localStorage.getItem('features'))?.randomQuestions.enabled ? getRandomQuestions() : hardCodedQuestions;
 

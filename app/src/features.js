@@ -1,15 +1,19 @@
 const featureFlags = {
     smartScore: {
         enabled: false,
-        description: 'Punishment for faulty answers',
+        description: 'Punishment for faulty answers'
     },
     randomQuestions: {
         enabled: false,
-        description: 'Randomize the questions',
+        description: 'Randomize the questions'
     },
     tieResults: {
         enabled: false,
-        description: 'Tied result if both players answer correctly an equal amount of times',
+        description: 'Tied result if both players answer correctly an equal amount of times'
+    },
+    moreStartPageFlags: {
+        enabled: false,
+        description: 'More and random flags on the front page'
     },
 };
 

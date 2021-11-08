@@ -62,6 +62,8 @@ const StartPage = () => {
 	const [snapshot, loading, error] = useObject(ref(db, 'nextGame'))
 	const [location, setLocation] = useLocation();
 
+	const moreFlagsFeature = JSON.parse(localStorage.getItem('features'))?.moreStartPageFlags.enabled;
+
 	if (loading) return <div className="fw6 fs5">Loading...</div>
 	const nextGame = snapshot.val()
 
@@ -87,8 +89,26 @@ const StartPage = () => {
 			await update(ref(db), updates2)
 		}
 	}
-	return (
-		<div className="page">
+
+	const shuffledFlags = utils.shuffle(Object.keys(countries).map(key => key.toLowerCase()));
+	const flags = [];
+	for (let i = 0; i < 100; i++) {
+		if (flags.includes(shuffledFlags[i])) {
+			i--;
+			continue;
+		}
+		flags.push(<div className="f32"><div className={`flag ${shuffledFlags[i]}`}></div></div>)
+	}
+
+	return (moreFlagsFeature
+		? <div className="page">
+			<div className="st-flags">
+				{flags}
+			</div>
+			<div className="button btn-square" onClick={play}>Play</div>
+		</div>
+
+		: <div className="page">
 			<div className="st-flags">
 				<div className="f32"><div className={`flag aze`}></div></div>
 				<div className="f32"><div className={`flag bih`}></div></div>
