@@ -9,7 +9,7 @@ describe("Test random questions feature", () => {
         const questions = getRandomQuestions();
         Object.values(questions).forEach((question) => {
             const { correct } = question;
-            const isUnique = Object.values(obj).some(q => q.correct !== correct);
+            const isUnique = Object.values(questions).some(q => q.correct !== correct);
 
             equal(isUnique, true);
         });
