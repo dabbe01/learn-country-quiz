@@ -14,4 +14,15 @@ describe("Test random questions feature", () => {
             equal(isUnique, true);
         });
     });
+    it("should not repeat the same answer options twice", () => {
+        const questions = getRandomQuestions();
+        Object.values(questions).forEach((question) => {
+            const { alternatives } = question;
+            const isUnique = Object.values(alternatives).every(q => {
+                alternatives.filter(a => a === q).length === 1;
+            });
+
+            equal(isUnique, true);
+        });
+    });
 });
