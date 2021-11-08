@@ -64,7 +64,6 @@ const StartPage = () => {
 	if (loading) return <div className="fw6 fs5">Loading...</div>
 	const nextGame = snapshot.val()
 
-
 	const play = async () => {
 		if (R.isNil(nextGame)) {
 			const updates = {}
@@ -160,7 +159,6 @@ const QuestionPage = ({ gameId, playerId }) => {
 		if (question.fastest) return
 		const features = JSON.parse(localStorage.getItem('features'));
 		const smartScore = features?.smartScore;
-		console.log(features)
 
 		const updates = {}
 		updates[`/games/${gameId}/questions/${game.currentQuestion}/fastest`] = { player: playerId, answer: countryCode }

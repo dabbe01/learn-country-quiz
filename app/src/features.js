@@ -4,7 +4,7 @@ const featureFlags = {
         description: 'Punishment for faulty answers',
     },
     randomQuestions: {
-        enabled: false,
+        enabled: true,
         description: 'Randomize the questions',
     },
     tieResults: {
