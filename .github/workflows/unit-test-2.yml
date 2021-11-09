@@ -10,4 +10,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: "install"
         working-directory: ./app
-        run: 'npm ci && npm test-ci'
+        run: 'npm ci && npm run test-ci'
