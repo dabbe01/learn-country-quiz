@@ -1,4 +1,3 @@
-
 const hardCodedQuestions = {
 	1: {
 		alternatives: {
