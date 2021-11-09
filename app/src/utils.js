@@ -41,11 +41,6 @@ export const getRandomQuestions = () => {
 	return randomCountries;
 }
 
-/**
- * Shuffle array using Fisher Yates algorithm
- * @param {array} array 
- * @returns {array} Shuffled array
- */
 export const shuffle = (array) => {
 	var m = array.length, t, i;
 
