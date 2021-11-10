@@ -42,7 +42,7 @@ export const getRandomQuestions = () => {
 }
 
 export const shuffle = (array) => {
-	var m = array.length, t, i;
+	let m = array.length, t, i;
 
 	while (m) {
 		i = Math.floor(Math.random() * m--);
