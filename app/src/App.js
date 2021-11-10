@@ -12,6 +12,7 @@ import * as featureFlags from './features'
 import CookieConsentTemp, { getCookieConsentValue } from "react-cookie-consent";
 const CookieConsent = CookieConsentTemp.default;
 import { initGA, handleAcceptCookie, handleDeclineCookie } from './analytics';
+import { Cookies } from './Cookies';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app"
@@ -68,6 +69,9 @@ function App() {
 						return <GamePage gameId={params.gameId} playerId={params.playerId} />
 					}}
 				</Route>
+				<Route path="/cookies">
+					<Cookies />
+				</Route>
 			</div>
 			<div className="footer"></div>
 		</div>
@@ -75,7 +79,7 @@ function App() {
 }
 
 const Consent = () => {
-	return (<CookieConsent enableDeclineButton onAccept={handleAcceptCookie} onDecline={handleDeclineCookie}>This website uses cookies to enhance the user experience.</CookieConsent>)
+	return (<CookieConsent enableDeclineButton onAccept={handleAcceptCookie} onDecline={handleDeclineCookie}>This website uses <Link href="/cookies" className="cookies">cookies</Link> to enhance the user experience.</CookieConsent>)
 }
 
 const StartPage = () => {
