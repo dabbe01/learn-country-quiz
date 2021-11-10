@@ -15,10 +15,18 @@ export const Cookies = () => {
             <ul>
                 <li>
                     <p>
+                        <strong>CookieConsent</strong>
+                    </p>
+                    <p>
+                        Used to identify if the user has accepted the use of cookies.
+                    </p>
+                </li>
+                <li>
+                    <p>
                         <strong>__cfduid</strong>
                     </p>
                     <p>
-                        Used to identify the user across sessions.
+                        Used to identify the user across sessions. (Google Analytics)
                     </p>
                 </li>
                 <li>
@@ -26,7 +34,7 @@ export const Cookies = () => {
                         <strong>_ga</strong>
                     </p>
                     <p>
-                        Used to track the usage of the website.
+                        Used to track the usage of the website. (Google Analytics)
                     </p>
                 </li>
                 <li>
@@ -34,7 +42,7 @@ export const Cookies = () => {
                         <strong>_gid</strong>
                     </p>
                     <p>
-                        Used to track the usage of the website.
+                        Used to track the usage of the website. (Google Analytics)
                     </p>
                 </li>
                 <li>
@@ -42,7 +50,7 @@ export const Cookies = () => {
                         <strong>_gat</strong>
                     </p>
                     <p>
-                        Used to track the usage of the website.
+                        Used to track the usage of the website. (Google Analytics)
                     </p>
                 </li>
             </ul>
