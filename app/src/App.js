@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import * as R from 'ramda'
 import { Link, Route, useLocation } from "wouter"
 import { customAlphabet } from 'nanoid'
@@ -9,10 +9,13 @@ import winning from '../assets/winning.png'
 import dog from '../assets/dog.png'
 import tie from '../assets/tie.png'
 import * as featureFlags from './features'
+import CookieConsentTemp, { getCookieConsentValue } from "react-cookie-consent";
+const CookieConsent = CookieConsentTemp.default;
+import { initGA, handleAcceptCookie, handleDeclineCookie } from './analytics';
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app"
-import { getAnalytics } from "firebase/analytics"
+// import { getAnalytics, logEvent } from "firebase/analytics"
 import { ref, getDatabase, set, update } from "firebase/database"
 import { useObject } from 'react-firebase-hooks/database'
 
@@ -31,21 +34,34 @@ const firebaseConfig = {
 	measurementId: "G-VNLGTV8JV1"
 };
 
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+let analytics;
 
 const db = getDatabase(app);
 
-
 function App() {
+
+	useEffect(() => {
+		const isConsent = getCookieConsentValue();
+		if (isConsent === "true") {
+			analytics = initGA(app);
+			handleAcceptCookie();
+		} else {
+			analytics = null;
+			handleDeclineCookie();
+		}
+	}, []);
 
 	return (
 		<div className="app">
 			<div className="header">THE FLAG GAME</div>
 			<div className="middle">
 				<Route path="/">
-					<StartPage />
+					<StartPage>
+						<Consent />
+					</StartPage>
 				</Route>
 				<Route path="/game/:gameId/:playerId">
 					{(params) => {
@@ -56,6 +72,10 @@ function App() {
 			<div className="footer"></div>
 		</div>
 	);
+}
+
+const Consent = () => {
+	return (<CookieConsent enableDeclineButton onAccept={handleAcceptCookie} onDecline={handleDeclineCookie}>This website uses cookies to enhance the user experience.</CookieConsent>)
 }
 
 const StartPage = () => {
@@ -93,7 +113,7 @@ const StartPage = () => {
 	const shuffledFlags = utils.shuffle(Object.keys(countries).map(key => key.toLowerCase()));
 	const flags = [];
 	if (moreFlagsFeature) {
-		for (let i = 0; i < 100; i++) {
+		for (let i = 0; i < 78; i++) {
 			if (flags.includes(shuffledFlags[i])) {
 				i--;
 				continue;
@@ -108,6 +128,7 @@ const StartPage = () => {
 				{flags}
 			</div>
 			<div className="button btn-square" onClick={play}>Play</div>
+			<Consent />
 		</div>
 
 		: <div className="page">
@@ -133,6 +154,7 @@ const StartPage = () => {
 				<div className="f32"><div className={`flag bwa`}></div></div>
 			</div>
 			<div className="button btn-square" onClick={play}>Play</div>
+			<Consent />
 		</div>
 	)
 }
