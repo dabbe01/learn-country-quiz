@@ -1,12 +1,15 @@
 import React from 'react'
 import * as R from 'ramda'
-import {Link, Route, useLocation} from "wouter"
+import { Link, Route, useLocation } from "wouter"
 import { customAlphabet } from 'nanoid'
 import './App.css'
 import * as utils from './utils'
 import countries from './countries'
 import winning from '../assets/winning.png'
 import dog from '../assets/dog.png'
+import tie from '../assets/tie.png'
+import * as featureFlags from './features'
+import Setup from './setup'
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app"
@@ -27,7 +30,7 @@ const firebaseConfig = {
 	messagingSenderId: "967534424377",
 	appId: "1:967534424377:web:a620c0c0e6a2f97ef738e8",
 	measurementId: "G-VNLGTV8JV1"
-  };
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -42,6 +45,9 @@ function App() {
 		<div className="app">
 			<div className="header">THE FLAG GAME</div>
 			<div className="middle">
+			<Route path="/setup">
+					<Setup/>
+				</Route>
 				<Route path="/">
 					<StartPage />
 				</Route>
@@ -60,9 +66,10 @@ const StartPage = () => {
 	const [snapshot, loading, error] = useObject(ref(db, 'nextGame'))
 	const [location, setLocation] = useLocation();
 
+	const moreFlagsFeature = JSON.parse(localStorage.getItem('features'))?.moreStartPageFlags.enabled;
+
 	if (loading) return <div className="fw6 fs5">Loading...</div>
 	const nextGame = snapshot.val()
-
 
 	const play = async () => {
 		if (R.isNil(nextGame)) {
@@ -86,8 +93,28 @@ const StartPage = () => {
 			await update(ref(db), updates2)
 		}
 	}
-	return (
-		<div className="page">
+
+	const shuffledFlags = utils.shuffle(Object.keys(countries).map(key => key.toLowerCase()));
+	const flags = [];
+	if (moreFlagsFeature) {
+		for (let i = 0; i < 100; i++) {
+			if (flags.includes(shuffledFlags[i])) {
+				i--;
+				continue;
+			}
+			flags.push(<div className="f32" key={shuffledFlags[i]}><div className={`flag ${shuffledFlags[i]}`}></div></div>)
+		}
+	}
+
+	return (moreFlagsFeature
+		? <div className="page">
+			<div className="st-flags">
+				{flags}
+			</div>
+			<div className="button btn-square" onClick={play}>Play</div>
+		</div>
+
+		: <div className="page">
 			<div className="st-flags">
 				<div className="f32"><div className={`flag aze`}></div></div>
 				<div className="f32"><div className={`flag bih`}></div></div>
@@ -114,7 +141,7 @@ const StartPage = () => {
 	)
 }
 
-const GamePage = ({gameId, playerId}) => {
+const GamePage = ({ gameId, playerId }) => {
 	const [snapshot, loading, error] = useObject(ref(db, `games/${gameId}`))
 	const [location, setLocation] = useLocation();
 
@@ -127,22 +154,22 @@ const GamePage = ({gameId, playerId}) => {
 		await update(ref(db), updates)
 		setLocation(`/`)
 	}
-	
+
 	if (game && game.status === 'playing') return <QuestionPage gameId={gameId} playerId={playerId} />
 	if (game && game.status === 'finished') return <ResultsPage gameId={gameId} playerId={playerId} />
-	
+
 	return (
 		<div className="page">
 			<div className="fw6 fs9 tac">
 				{!game && 'Waiting for opponent...'}
 				{game && game.status === 'starting' && 'Starting game... Get READY!'}
 			</div>
-			{!game && <div className="link" style={{marginTop: '10rem'}} onClick={cancel}>Cancel</div>}
+			{!game && <div className="link" style={{ marginTop: '10rem' }} onClick={cancel}>Cancel</div>}
 		</div>
 	)
 }
 
-const QuestionPage = ({gameId, playerId}) => {
+const QuestionPage = ({ gameId, playerId }) => {
 	const [snapshot, loading, error] = useObject(ref(db, `games/${gameId}`))
 
 	if (loading) return <div className="fw6 fs5">Loading...</div>
@@ -155,13 +182,20 @@ const QuestionPage = ({gameId, playerId}) => {
 
 	if (!question) return 'Loading...'
 
-	const answer = async (countryCode) => {
+	const features = JSON.parse(localStorage.getItem('features'));
+	const smartScore = features?.smartScore;
+
+	console.log(features)
+
+	const answer = async (countryCode) => {
 		if (question.fastest) return
 
 		const updates = {}
-		updates[`/games/${gameId}/questions/${game.currentQuestion}/fastest`] = {player: playerId, answer: countryCode}
+		updates[`/games/${gameId}/questions/${game.currentQuestion}/fastest`] = { player: playerId, answer: countryCode }
 		if (countryCode == question.correct) {
 			updates[`/games/${gameId}/score/${youKey}`] = game.score[youKey] + 1
+		} else if (countryCode != question.correct && smartScore?.enabled) {
+			updates[`/games/${gameId}/score/${youKey}`] = game.score[youKey] - 1
 		}
 		await update(ref(db), updates)
 
@@ -189,17 +223,17 @@ const QuestionPage = ({gameId, playerId}) => {
 					if (question.fastest && question.fastest.answer == countryCode) {
 						correct = question.fastest.answer === question.correct
 						if (question.fastest.player === playerId) {
-							youOrOpponent = `YOU ${correct ? ' +1' : ''}`
+							youOrOpponent = `YOU ${correct ? ' +1' : smartScore.enabled ? ' -1' : ''}`;
 						}
 						else {
-							youOrOpponent = `OPPONENT ${correct ? ' +1' : ''}`
+							youOrOpponent = `OPPONENT ${correct ? ' +1' : smartScore.enabled ? ' -1' : ''}`;
 						}
 					}
 					return (
 						<div className={`button alt ${correct && 'alt-green'} ${correct === false && 'alt-red'}`}
-						key={countryCode} title={countryCode} onClick={() => answer(countryCode)}>
+							key={countryCode} title={countryCode} onClick={() => answer(countryCode)}>
 							{countries[countryCode.toUpperCase()]}
-							{}
+							{ }
 							{youOrOpponent && <div className="alt-label">{youOrOpponent}</div>}
 						</div>)
 				})}
@@ -212,7 +246,7 @@ const QuestionPage = ({gameId, playerId}) => {
 	)
 }
 
-const QuickResults = ({you, opponent}) => {
+const QuickResults = ({ you, opponent }) => {
 	return (
 		<div className="quick-results">
 			YOU {you} - {opponent} OPPONENT
@@ -220,7 +254,7 @@ const QuickResults = ({you, opponent}) => {
 	)
 }
 
-const ResultsPage = ({gameId, playerId}) => {
+const ResultsPage = ({ gameId, playerId }) => {
 	const [snapshot, loading, error] = useObject(ref(db, `games/${gameId}`))
 
 	if (loading) return <div className="fw6 fs5">Loading...</div>
@@ -229,31 +263,46 @@ const ResultsPage = ({gameId, playerId}) => {
 	const youKey = `player${playerId}`
 	const opponentKey = `player${parseInt(playerId) === 1 ? 2 : 1}`
 
-	const youWon = (game.score[youKey] >= game.score[opponentKey])
+	const youWon = game.score[youKey] > game.score[opponentKey];
+
+	const youLost = game.score[youKey] < game.score[opponentKey];
+
+	const tied = game.score[youKey] === game.score[opponentKey];
 
 	return (
 		<div className="page">
 			{youWon && <Won you={game.score[youKey]} opponent={game.score[opponentKey]} />}
-			{!youWon && <Lost you={game.score[youKey]} opponent={game.score[opponentKey]} />}
+			{youLost && <Lost you={game.score[youKey]} opponent={game.score[opponentKey]} />}
+			{tied && <Tied you={game.score[youKey]} opponent={game.score[opponentKey]} />}
 			<Link href="/" className="re-home link">Home</Link>
 		</div>
 	)
 }
 
-const Won = ({you, opponent}) => {
+const Tied = ({ you, opponent }) => {
 	return (
 		<div className="results">
-			<img src={winning} style={{width: '80%'}} />
+			<img src={tie} style={{ width: '80%' }} />
+			<div className="re-text">It's a tie!</div>
+			<QuickResults you={you} opponent={opponent} />
+		</div>
+	)
+}
+
+const Won = ({ you, opponent }) => {
+	return (
+		<div className="results">
+			<img src={winning} style={{ width: '80%' }} />
 			<div className="re-text">Congratulations!!</div>
 			<QuickResults you={you} opponent={opponent} />
 		</div>
 	)
 }
 
-const Lost = ({you, opponent}) => {
+const Lost = ({ you, opponent }) => {
 	return (
 		<div className="results">
-			<img src={dog} style={{width: '80%'}} />
+			<img src={dog} style={{ width: '80%' }} />
 			<div className="re-text">Better luck next time...</div>
 			<QuickResults you={you} opponent={opponent} />
 		</div>

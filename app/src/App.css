@@ -143,3 +143,16 @@
 .re-home {
 	margin-top: 2rem;
 }
+.setup-link{
+	position: absolute;
+	top: 8rem;
+	height: 3rem;
+    background-color: #2196F3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    text-decoration: none;
+    color: white;
+    
+}
