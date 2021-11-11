@@ -60,6 +60,17 @@ export const Cookies = () => {
                     <h1>Sub processors</h1>
                     <li>
                         <p>
+                            <strong>The Flag Game</strong>
+                        </p>
+                        <p>
+                            Swe
+                        </p>
+                        <p>
+                            Cookie consent
+                        </p>
+                    </li>
+                    <li>
+                        <p>
                             <strong>Google, Inc</strong>
                         </p>
                         <p>
