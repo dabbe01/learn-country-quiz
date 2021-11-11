@@ -1,4 +1,4 @@
-import countries from './countries';
+import countries from './countries.js';
 
 const hardCodedQuestions = {
 	1: {
@@ -41,9 +41,8 @@ export const getRandomQuestions = () => {
 	return randomCountries;
 }
 
-// Fisher Yates shuffle
 export const shuffle = (array) => {
-	var m = array.length, t, i;
+	let m = array.length, t, i;
 
 	while (m) {
 		i = Math.floor(Math.random() * m--);

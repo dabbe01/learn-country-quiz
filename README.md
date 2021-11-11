@@ -1,6 +1,8 @@
 # Country Quiz
 This is an exercise to learn about Continious Deployment, trunk based development and feature flags. Divide into teams of 3 and come up with a team name.
 
+[![Unit test](https://github.com/dabbe01/learn-country-quiz/actions/workflows/unit-test-2.yml/badge.svg?branch=main)](https://github.com/dabbe01/learn-country-quiz/actions/workflows/unit-test-2.yml)
+
 ## Introduction
 You're all employees at the company Initech in sunny California.
 
