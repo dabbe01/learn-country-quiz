@@ -16,21 +16,6 @@
   right: 8rem;
 }
 
-.cookies {
-  display: flex;
-  flex-direction: row;
-}
-
-.cookies ul {
-  display: flex;
-  flex-direction: column;
-}
-
-.cookies > p {
-  display: flex;
-  flex-direction: row;
-}
-
 .switch {
   position: relative;
   display: inline-block;
